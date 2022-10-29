@@ -26,7 +26,7 @@ while counter<5:
             lin=post.find('a',class_='link').get('href')
             link='https://www.gutenberg.org/'+lin
 
-            df=df.concat({'Name':nam,'Author':au,'Downloads':dow,'link':link},ignore_index=True)
+            df=df.append({'Name':nam,'Author':au,'Downloads':dow,'link':link},ignore_index=True)
             
         except:
             pass
@@ -36,6 +36,6 @@ while counter<5:
     page=requests.get(next_page)
     soup=BeautifulSoup(page.text,'html.parser')
     counter=counter+1
-    
+
 print(df)
 
