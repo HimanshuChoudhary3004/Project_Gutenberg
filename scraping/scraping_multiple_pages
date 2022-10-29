@@ -36,7 +36,6 @@ while counter<5:
     page=requests.get(next_page)
     soup=BeautifulSoup(page.text,'html.parser')
     counter=counter+1
-
-
+    
 print(df)
 
