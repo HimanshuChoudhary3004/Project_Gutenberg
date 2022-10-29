@@ -1,0 +1,42 @@
+from os import link
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+import lxml
+
+
+
+url="https://www.gutenberg.org/ebooks/subject/471?sort_order=downloads"
+
+page=requests.get(url)
+content=page.text
+soup=BeautifulSoup(content,'html.parser')
+
+postings=soup.find_all('li',class_="booklink")
+
+df=pd.DataFrame({'Name':[''],'Author':[''],'Downloads':[''],'link':['']})
+
+counter=0
+while counter<5:
+    for post in postings:
+        try:
+            nam=post.find('span',class_='title').text
+            au=post.find('span',class_='subtitle').text
+            dow=post.find('span',class_='extra').text
+            lin=post.find('a',class_='link').get('href')
+            link='https://www.gutenberg.org/'+lin
+
+            df=df.concat({'Name':nam,'Author':au,'Downloads':dow,'link':link},ignore_index=True)
+            
+        except:
+            pass
+
+    next_p=soup.find('div',class_='padded').find('a').get('href')
+    next_page="https://www.gutenberg.org/"+next_p
+    page=requests.get(next_page)
+    soup=BeautifulSoup(page.text,'html.parser')
+    counter=counter+1
+
+
+print(df)
+
